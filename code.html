@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bạn sinh ra để làm nghề gì? - Trắc nghiệm tính cách chọn ngành</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        
+        .question-card {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+        }
+        
+        .question-card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transform: translateY(-2px);
+        }
+        
+        .option-btn {
+            transition: all 0.2s ease;
+        }
+        
+        .option-btn:hover {
+            transform: scale(1.02);
+        }
+        
+        .inspiring-bg {
+            background: linear-gradient(135deg, #fce7f3 0%, #e0e7ff 100%);
+        }
+        
+        .organizer-bg {
+            background: linear-gradient(135deg, #ecfdf5 0%, #dbeafe 100%);
+        }
+        
+        .healer-bg {
+            background: linear-gradient(135deg, #ecfdf5 0%, #f0fdfa 100%);
+        }
+        
+        .analyzer-bg {
+            background: linear-gradient(135deg, #eff6ff 0%, #e0f2fe 100%);
+        }
+        
+        .btn-primary {
+            background-color: #4f46e5;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: #4338ca;
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <div class="max-w-3xl mx-auto">
+                <h1 class="text-4xl font-bold text-indigo-800 mb-4">Bạn sinh ra để làm nghề gì?</h1>
+                <p class="text-xl text-slate-600">Khám phá nghề nghiệp phù hợp với tính cách và ước mơ của bạn</p>
+                <div class="mt-8 w-24 h-1 bg-indigo-500 mx-auto rounded-full"></div>
+            </div>
+        </header>
+
+        <!-- Quiz Container -->
+        <div id="quiz-container" class="max-w-3xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+            <!-- Introduction Screen -->
+            <div id="intro-screen" class="p-8">
+                <div class="flex justify-center mb-8">
+                    <img src="https://placehold.co/600x400?text=Kh%C3%A1m+ph%C3%A1+ng%C3%A0nh+h%E1%BB%8Dc+ph%C3%B9+h%E1%BB%A3p" 
+                         alt="Hình ảnh minh họa các bạn trẻ đang thảo luận về tương lai trong không gian hiện đại" 
+                         class="rounded-lg shadow-md w-full max-w-md">
+                </div>
+                <h2 class="text-2xl font-semibold text-center mb-6 text-slate-800">Trắc nghiệm tính cách chọn ngành</h2>
+                <p class="text-slate-600 mb-6 text-center">
+                    Trắc nghiệm gồm 12 câu hỏi chia làm 3 nhóm: Tính cách, Sở thích & Giá trị sống, Mục tiêu & Định hướng tương lai.
+                    Giúp bạn khám phá nhóm tính cách và gợi ý ngành học phù hợp tại các trường đại học.
+                </p>
+                <div class="text-center mt-8">
+                    <button onclick="startQuiz()" class="btn-primary text-white font-medium py-3 px-8 rounded-lg shadow-md">
+                        Bắt đầu trắc nghiệm
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quiz Questions -->
+            <div id="quiz-questions" class="hidden p-6 sm:p-8">
+                <!-- Progress Bar -->
+                <div class="mb-8">
+                    <div class="flex justify-between mb-2">
+                        <span id="current-question" class="font-medium text-indigo-700">1/12</span>
+                        <span class="text-slate-500">Trắc nghiệm chọn ngành</span>
+                    </div>
+                    <div class="w-full bg-slate-200 rounded-full h-2.5">
+                        <div id="progress-bar" class="bg-indigo-600 h-2.5 rounded-full" style="width: 8%"></div>
+                    </div>
+                </div>
+
+                <!-- Current Question -->
+                <div id="current-question-container"></div>
+
+                <!-- Navigation -->
+                <div class="flex justify-between mt-8">
+                    <button id="prev-btn" onclick="prevQuestion()" class="px-6 py-2 border border-slate-300 rounded-lg text-slate-600 font-medium hidden">Quay lại</button>
+                    <button id="next-btn" onclick="nextQuestion()" class="ml-auto px-6 py-2 bg-indigo-600 text-white rounded-lg font-medium">Tiếp theo</button>
+                </div>
+            </div>
+
+            <!-- Results Screen -->
+            <div id="results-screen" class="hidden p-6 sm:p-8">
+                <div id="result-content" class="text-center">
+                    <!-- Result will be displayed here -->
+                </div>
+                <div class="flex justify-center mt-8">
+                    <button onclick="restartQuiz()" class="px-6 py-2 border border-slate-300 rounded-lg text-slate-600 font-medium mr-4">
+                        Làm lại trắc nghiệm
+                    </button>
+                    <button class="btn-primary text-white font-medium py-2 px-6 rounded-lg">
+                        Đặt lịch tư vấn 1-1
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Quiz data
+        const quizData = [
+            // Personality questions
+            {
+                question: "Khi làm việc nhóm, bạn thường là người:",
+                options: [
+                    "Đưa ra ý tưởng mới và truyền cảm hứng",
+                    "Sắp xếp, phân chia công việc rõ ràng",
+                    "Nhẹ nhàng lắng nghe và kết nối mọi người",
+                    "Lặng lẽ làm nhưng luôn hoàn thành đúng hạn"
+                ],
+                group: "personality"
+            },
+            {
+                question: "Bạn xử lý áp lực bằng cách:",
+                options: [
+                    "Chia sẻ với người khác hoặc viết ra",
+                    "Lập kế hoạch rõ ràng để kiểm soát",
+                    "Tập trung vào cảm xúc của bản thân và nghỉ ngơi",
+                    "Phân tích nguyên nhân và tìm giải pháp logic"
+                ],
+                group: "personality"
+            },
+            {
+                question: "Bạn thường cảm thấy thoải mái nhất khi:",
+                options: [
+                    "Tham gia vào các hoạt động xã hội",
+                    "Lên kế hoạch cho các dự án",
+                    "Giúp đỡ người khác",
+                    "Giải quyết các vấn đề phức tạp"
+                ],
+                group: "personality"
+            },
+            {
+                question: "Bạn thích làm việc trong môi trường:",
+                options: [
+                    "Năng động, nhiều con người",
+                    "Có quy trình rõ, hiệu suất cao",
+                    "Nhân văn, thân thiện",
+                    "Được tập trung chuyên môn sâu, ít bị làm phiền"
+                ],
+                group: "personality"
+            },
+            // Interests & Values questions
+            {
+                question: "Bạn thích dành thời gian cho việc nào nhất?",
+                options: [
+                    "Viết lách, chia sẻ, làm video",
+                    "Tổ chức sự kiện hoặc làm việc có mục tiêu rõ",
+                    "Tham gia hoạt động xã hội, thiện nguyện",
+                    "Tìm hiểu công nghệ, nghiên cứu số liệu"
+                ],
+                group: "interests"
+            },
+            {
+                question: "Điều gì khiến bạn thấy công việc \"xứng đáng\"?",
+                options: [
+                    "Có ảnh hưởng tới người khác",
+                    "Thành tựu rõ ràng, thăng tiến nhanh",
+                    "Giúp đỡ người yếu thế hoặc lan tỏa yêu thương",
+                    "Giải quyết vấn đề khó và tạo ra giá trị thực tế"
+                ],
+                group: "interests"
+            },
+            {
+                question: "Bạn thường tìm kiếm điều gì trong công việc?",
+                options: [
+                    "Sự sáng tạo và tự do",
+                    "Sự ổn định và an toàn",
+                    "Cảm giác thỏa mãn khi giúp đỡ người khác",
+                    "Thách thức và cơ hội học hỏi"
+                ],
+                group: "interests"
+            },
+            {
+                question: "Bạn thích tham gia vào hoạt động nào nhất?",
+                options: [
+                    "Thảo luận, tranh luận",
+                    "Lập kế hoạch, tổ chức",
+                    "Tình nguyện, giúp đỡ cộng đồng",
+                    "Nghiên cứu, phân tích"
+                ],
+                group: "interests"
+            },
+            // Goals & Future questions
+            {
+                question: "Trong tương lai bạn muốn:",
+                options: [
+                    "Trở thành người truyền cảm hứng, có ảnh hưởng lớn",
+                    "Lãnh đạo một doanh nghiệp hoặc tổ chức",
+                    "Làm công việc giúp đỡ người khác sống tốt hơn",
+                    "Sáng tạo hoặc cải tiến công nghệ để thay đổi xã hội"
+                ],
+                group: "goals"
+            },
+            {
+                question: "Bạn muốn môi trường làm việc thế nào?",
+                options: [
+                    "Năng động, nhiều con người",
+                    "Có quy trình rõ, hiệu suất cao",
+                    "Nhân văn, thân thiện",
+                    "Được tập trung chuyên môn sâu, ít bị làm phiền"
+                ],
+                group: "goals"
+            },
+            {
+                question: "Bạn có thể chấp nhận rủi ro trong công việc không?",
+                options: [
+                    "Có, tôi thích thử thách",
+                    "Không, tôi thích sự an toàn",
+                    "Có, nếu nó giúp đỡ người khác",
+                    "Có, nếu có kế hoạch rõ ràng"
+                ],
+                group: "goals"
+            },
+            {
+                question: "Bạn muốn được công nhận như thế nào trong công việc?",
+                options: [
+                    "Qua sự sáng tạo và ảnh hưởng",
+                    "Qua thành tựu và hiệu suất",
+                    "Qua sự giúp đỡ và hỗ trợ người khác",
+                    "Qua khả năng giải quyết vấn đề"
+                ],
+                group: "goals"
+            }
+        ];
+
+        // Personality types mapping
+        const personalityTypes = {
+            A: {
+                name: "Người truyền cảm hứng",
+                description: "Bạn là người có khả năng giao tiếp tốt, truyền cảm hứng, yêu thích làm việc với con người và muốn tạo ảnh hưởng tích cực.",
+                careers: ["Giáo viên", "Nhà báo", "Sáng tạo nội dung", "Mentor", "Người dẫn chương trình"],
+                color: "indigo"
+            },
+            B: {
+                name: "Người tổ chức",
+                description: "Bạn giỏi lập kế hoạch, thích tổ chức, điều phối và đạt được mục tiêu rõ ràng. Thích những gì có quy trình, hiệu quả và logic.",
+                careers: ["Quản lý", "Kế hoạch tài chính", "Quản lý dự án", "Điều phối logistics", "Chuyên viên phân tích kinh doanh"],
+                color: "emerald"
+            },
+            C: {
+                name: "Người chữa lành",
+                description: "Bạn giàu lòng thấu cảm, mong muốn giúp đỡ người khác vượt qua khó khăn về thể chất hoặc tinh thần.",
+                careers: ["Bác sĩ", "Nhà tâm lý", "Công tác xã hội", "Giáo viên mầm non", "Tư vấn viên"],
+                color: "teal"
+            },
+            D: {
+                name: "Người phân tích",
+                description: "Bạn yêu thích công nghệ, logic, phân tích dữ liệu và giải quyết vấn đề phức tạp một cách hệ thống.",
+                careers: ["Lập trình viên", "Phân tích dữ liệu", "Kỹ sư phần mềm", "Nghiên cứu khoa học", "Kỹ sư hệ thống"],
+                color: "blue"
+            }
+        };
+
+        // University major recommendations
+        const universityMajors = {
+            A: {
+                vinuni: ["Communication & Media Studies", "Business Administration – Marketing Track"],
+                buv: ["Marketing Management", "Contemporary Creative Practice", "International Business"],
+                rmit: ["Communication (Digital Media)", "Marketing", "Professional Communication"],
+                fulbright: ["Arts in Arts and Sciences", "Social Studies", "Integrated Sciences"]
+            },
+            B: {
+                vinuni: ["Business Administration – Operations & Analytics", "Finance"],
+                buv: ["Accounting & Finance", "International Business Management", "Business & Marketing"],
+                rmit: ["Business (Management)", "Economics and Finance", "Entrepreneurship"],
+                fulbright: ["Economics", "Economics & Social Sciences", "Social Sciences"]
+            },
+            C: {
+                vinuni: ["Medicine", "Nursing", "Psychology"],
+                buv: ["Psychology", "International Hospitality Management"],
+                rmit: ["Psychology", "Social Work", "Human Resource Management"],
+                fulbright: ["Social Studies", "Psychology", "Integrated Sciences (Health Track)"]
+            },
+            D: {
+                vinuni: ["Computer Science", "Data Science & AI", "Electrical Engineering"],
+                buv: ["Computer Science", "Cyber Security", "Computer Games Development"],
+                rmit: ["Information Technology", "Data Science", "Engineering"],
+                fulbright: ["Computer Science", "Engineering", "Integrated Sciences (STEM Track)"]
+            }
+        };
+
+        // Quiz state
+        let currentQuestion = 0;
+        let answers = [];
+        let scores = { A: 0, B: 0, C: 0, D: 0 };
+
+        // DOM Elements
+        const introScreen = document.getElementById('intro-screen');
+        const quizQuestions = document.getElementById('quiz-questions');
+        const resultsScreen = document.getElementById('results-screen');
+        const currentQuestionContainer = document.getElementById('current-question-container');
+        const currentQuestionNumber = document.getElementById('current-question');
+        const progressBar = document.getElementById('progress-bar');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const resultContent = document.getElementById('result-content');
+
+        // Start the quiz
+        function startQuiz() {
+            introScreen.classList.add('hidden');
+            quizQuestions.classList.remove('hidden');
+            updateQuestion();
+        }
+
+        // Update the current question display
+        function updateQuestion() {
+            if (currentQuestion >= quizData.length) {
+                showResults();
+                return;
+            }
+
+            const question = quizData[currentQuestion];
+            currentQuestionNumber.textContent = `${currentQuestion + 1}/${quizData.length}`;
+            progressBar.style.width = `${((currentQuestion + 1) / quizData.length) * 100}%`;
+
+            let optionsHtml = '';
+            question.options.forEach((option, index) => {
+                const optionLetter = String.fromCharCode(65 + index); // A, B, C, D
+                optionsHtml += `
+                    <div onclick="selectOption(${index})" 
+                         class="option-btn cursor-pointer mb-4 p-4 border border-slate-200 rounded-lg hover:border-indigo-300 hover:bg-indigo-50 ${answers[currentQuestion] === index ? 'bg-indigo-100 border-indigo-400' : ''}">
+                        <div class="flex items-center">
+                            <div class="flex items-center justify-center w-8 h-8 rounded-full mr-3 font-medium ${answers[currentQuestion] === index ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600'}">${optionLetter}</div>
+                            <div>${option}</div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            const questionHtml = `
+                <div class="question-card bg-white p-6 rounded-xl mb-6">
+                    <h3 class="text-xl font-semibold mb-6">${question.question}</h3>
+                    <div class="options-container">
+                        ${optionsHtml}
+                    </div>
+                </div>
+            `;
+
+            currentQuestionContainer.innerHTML = questionHtml;
+
+            // Update button states
+            prevBtn.classList.toggle('hidden', currentQuestion === 0);
+            nextBtn.textContent = currentQuestion === quizData.length - 1 ? 'Xem kết quả' : 'Tiếp theo';
+        }
+
+        // Select an option
+        function selectOption(optionIndex) {
+            answers[currentQuestion] = optionIndex;
+            updateQuestion();
+        }
+
+        // Go to next question
+        function nextQuestion() {
+            if (answers[currentQuestion] === undefined) {
+                alert("Vui lòng chọn một đáp án trước khi tiếp tục!");
+                return;
+            }
+
+            currentQuestion++;
+            updateQuestion();
+        }
+
+        // Go to previous question
+        function prevQuestion() {
+            currentQuestion--;
+            updateQuestion();
+        }
+
+        // Show quiz results
+        function showResults() {
+            calculateScores();
+            const personalityType = determinePersonalityType();
+            const result = personalityTypes[personalityType];
+            
+            quizQuestions.classList.add('hidden');
+            resultsScreen.classList.remove('hidden');
+            
+            // Background class based on personality type
+            resultsScreen.classList.add(`${result.color}-bg`);
+            
+            const majors = universityMajors[personalityType];
+            
+            let majorsHtml = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                    <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <h3 class="font-bold text-lg mb-4 text-indigo-700">VinUni</h3>
+                        <ul class="space-y-2">
+                            ${majors.vinuni.map(major => `<li class="flex items-start">
+                                <svg class="w-5 h-5 text-indigo-500 mt-0.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                ${major}
+                            </li>`).join('')}
+                        </ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <h3 class="font-bold text-lg mb-4 text-indigo-700">BUV</h3>
+                        <ul class="space-y-2">
+                            ${majors.buv.map(major => `<li class="flex items-start">
+                                <svg class="w-5 h-5 text-indigo-500 mt-0.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                ${major}
+                            </li>`).join('')}
+                        </ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <h3 class="font-bold text-lg mb-4 text-indigo-700">RMIT</h3>
+                        <ul class="space-y-2">
+                            ${majors.rmit.map(major => `<li class="flex items-start">
+                                <svg class="w-5 h-5 text-indigo-500 mt-0.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                ${major}
+                            </li>`).join('')}
+                        </ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <h3 class="font-bold text-lg mb-4 text-indigo-700">Fulbright</h3>
+                        <ul class="space-y-2">
+                            ${majors.fulbright.map(major => `<li class="flex items-start">
+                                <svg class="w-5 h-5 text-indigo-500 mt-0.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                ${major}
+                            </li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+            
+            const resultHtml = `
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold mb-4">Kết quả trắc nghiệm</h2>
+                    <div class="text-xl font-semibold text-${result.color}-600">Bạn là ${result.name}</div>
+                </div>
+                
+                <div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-sm mb-8">
+                    <div class="flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/3 mb-4 md:mb-0">
+                            <img src="https://placehold.co/300x200?text=${result.name.replace(/ /g, '+')}" 
+                                 alt="${result.name} - ${result.description}" 
+                                 class="w-full h-auto rounded-lg">
+                        </div>
+                        <div class="md:w-2/3 md:pl-6">
+                            <h3 class="text-xl font-semibold mb-3">${result.description}</h3>
+                            <p class="mb-4 text-slate-600">Các nghề nghiệp phù hợp với bạn:</p>
+                            <div class="flex flex-wrap gap-2">
+                                ${result.careers.map(career => `
+                                    <span class="px-3 py-1 bg-${result.color}-100 text-${result.color}-800 text-sm rounded-full">${career}</span>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="max-w-4xl mx-auto">
+                    <h3 class="text-xl font-semibold mb-6 text-center">Gợi ý ngành học phù hợp tại các trường đại học</h3>
+                    ${majorsHtml}
+                </div>
+                
+                <div class="mt-12 text-center">
+                    <p class="text-lg mb-6">Bạn muốn biết ngành nào phù hợp với hồ sơ hiện tại của bạn?</p>
+                    <p class="font-medium text-indigo-700">Đặt lịch tư vấn 1-1 cùng mentor ngay!</p>
+                </div>
+            `;
+            
+            resultContent.innerHTML = resultHtml;
+        }
+
+        // Calculate scores based on answers
+        function calculateScores() {
+            scores = { A: 0, B: 0, C: 0, D: 0 };
+            
+            answers.forEach((answer, index) => {
+                if (answer !== undefined) {
+                    const optionLetter = String.fromCharCode(65 + answer); // A, B, C, D
+                    scores[optionLetter]++;
+                }
+            });
+        }
+
+        // Determine the dominant personality type
+        function determinePersonalityType() {
+            let maxScore = 0;
+            let dominantType = 'A';
+            
+            for (const [type, score] of Object.entries(scores)) {
+                if (score > maxScore) {
+                    maxScore = score;
+                    dominantType = type;
+                }
+            }
+            
+            return dominantType;
+        }
+
+        // Restart the quiz
+        function restartQuiz() {
+            currentQuestion = 0;
+            answers = [];
+            scores = { A: 0, B: 0, C: 0, D: 0 };
+            
+            resultsScreen.classList.add('hidden');
+            introScreen.classList.remove('hidden');
+            
+            // Remove any background color classes
+            resultsScreen.classList.remove('indigo-bg', 'emerald-bg', 'teal-bg', 'blue-bg');
+        }
+    </script>
+</body>
+</html>
